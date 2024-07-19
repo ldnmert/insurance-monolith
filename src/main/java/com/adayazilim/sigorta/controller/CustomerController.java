@@ -9,6 +9,7 @@ import com.adayazilim.sigorta.service.UserService;
 import com.adayazilim.sigorta.util.AuthenticationUtil;
 import lombok.Getter;
 
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,8 @@ public class CustomerController {
         List<CustomerDetailDto> customers = customerService.getCustomersOfCurrentUser(currentUser.getId());
         return ResponseEntity.ok(customers);
     }
+
+
 
 
 }

@@ -6,15 +6,13 @@ import lombok.Data;
 @Entity
 @Data
 
-public class VehicleDetail {
+public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "vehicleInfo")
-    private Policy policy;
-
+    private String policyNumber;
     private Integer plateCityCode;
     private String plateCode;
     private String brand;

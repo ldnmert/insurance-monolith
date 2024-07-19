@@ -13,7 +13,7 @@ public class Policy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String policyNo;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -23,17 +23,17 @@ public class Policy {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "vehicle_info_id", referencedColumnName = "id")
-    private VehicleDetail vehicleInfo;
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "payment_id", referencedColumnName = "id")
     private Payment payment;
 
 
+    private String policyNumber;
 
-    private char status;
+
+    private char status = 'T';
     private String branchCode;
     private double amount;
     private LocalDate startDate;

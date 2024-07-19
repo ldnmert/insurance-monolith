@@ -29,16 +29,16 @@ public class PolicyController {
 
     }
 
-    @PostMapping
-    public ResponseEntity<Boolean> createPolicy(@RequestBody CreatePolicyDto policyDto, Authentication authentication
-            , @RequestParam Long customerId) {
-
-    User user = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
-    Policy policy = CreatePolicyDto.toEntity(policyDto);
-    policy.setUser(user);
-    policy.setPolicyNo("1234443");
-    policy.setCustomer(customerService.getCustomerById(customerId));
-    policyService.createPolicy(policy);
-    return ResponseEntity.ok(true);
-    }
+//    @PostMapping
+//    public ResponseEntity<Boolean> createPolicy(@RequestBody CreatePolicyDto policyDto, Authentication authentication
+//            , @RequestParam Long customerId) {
+//
+//    User user = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
+//    Policy policy = CreatePolicyDto.toEntity(policyDto);
+//    policy.setUser(user);
+////    policy.setPolicyNo("1234443");
+//    policy.setCustomer(customerService.getCustomerById(customerId));
+//    policyService.createPolicy(policy);
+//    return ResponseEntity.ok(true);
+//    }
 }
