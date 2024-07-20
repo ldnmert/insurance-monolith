@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -49,6 +50,12 @@ public class PolicyService {
         return policyNumber;
     }
 
+    public double changeStatusAndGetAmount(String policyNumber) {
+
+        Policy policy = policyRepository.findByPolicyNumber(policyNumber).orElseThrow(NoSuchElementException::new);
+        policy.setStatus('K');
+        return policy.getAmount();
+    }
 
     public String generateUniquePolicyNumber() {
         Random random = new Random();
@@ -62,7 +69,15 @@ public class PolicyService {
     public List<PolicyDetailDto> getLastTenPolicyOfCurrentUser(Long id) {
 
         List<Policy> policies =  policyRepository.findTop10ByUserIdOrderByCreatedAtDesc(id);
+
+
+
         return PolicyDetailDto.toDtoList(policies);
 
+    }
+
+    public List<PolicyDetailDto> getPolicyOfCurrentUserByCustomer(Long userId, Long customerId) {
+        List<Policy> policies = policyRepository.findByCustomerIdAndUserId(customerId, userId);
+        return PolicyDetailDto.toDtoList(policies);
     }
 }

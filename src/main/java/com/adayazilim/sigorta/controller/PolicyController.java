@@ -1,5 +1,6 @@
 package com.adayazilim.sigorta.controller;
 
+import com.adayazilim.sigorta.dto.CreatePaymentDto;
 import com.adayazilim.sigorta.dto.CreatePolicyDto;
 import com.adayazilim.sigorta.dto.PolicyDetailDto;
 import com.adayazilim.sigorta.entity.Policy;
@@ -53,6 +54,14 @@ public class PolicyController {
         return ResponseEntity.ok(policies);
     }
 
-  
+    @GetMapping("/get-policies-of-customer")
+    public ResponseEntity<List<PolicyDetailDto>> getPoliciesOfCustomerOfcurrentUser(Authentication authentication, @RequestParam Long customerId) {
+        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
+
+        return  ResponseEntity.ok(policyService.getPolicyOfCurrentUserByCustomer(currentUser.getId(), customerId));
+
+    }
+
+
 
 }

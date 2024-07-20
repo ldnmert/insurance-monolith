@@ -26,9 +26,7 @@ public class Policy {
 
 
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_id", referencedColumnName = "id")
-    private Payment payment;
+
 
 
     private String policyNumber;
@@ -40,7 +38,8 @@ public class Policy {
     private LocalDate startDate;
 
     private LocalDate endDate;
-    @Column(name = "created_at", nullable = false, updatable = false)
+
+//    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
