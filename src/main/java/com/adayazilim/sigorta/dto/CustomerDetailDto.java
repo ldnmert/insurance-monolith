@@ -18,8 +18,8 @@ public class CustomerDetailDto {
     private String phone;
     private String city;
     private String district;
-    private List<Long> userIds;
-    private List<String> userNames;
+//    private List<Long> userIds;
+//    private List<String> userNames;
 
     public static CustomerDetailDto toDto(Customer customer) {
         CustomerDetailDto dto = new CustomerDetailDto();
@@ -30,12 +30,12 @@ public class CustomerDetailDto {
         dto.setPhone(customer.getPhone());
         dto.setCity(customer.getCity());
         dto.setDistrict(customer.getDistrict());
-        List<Long> userIds = customer.getUsers().stream()
-                .map(User::getId)
-                .collect(Collectors.toList());
-        dto.setUserIds(userIds);
-
-        dto.setUserIds(userIds);
+//        List<Long> userIds = customer.getUsers().stream()
+//                .map(User::getId)
+//                .collect(Collectors.toList());
+//        dto.setUserIds(userIds);
+//
+//        dto.setUserIds(userIds);
 
 
 

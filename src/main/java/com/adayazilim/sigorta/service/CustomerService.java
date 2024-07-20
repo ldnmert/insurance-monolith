@@ -38,7 +38,9 @@ public class CustomerService {
     }
 
 
+    public List<CustomerDetailDto> getLastTenCustomersByUserId(Long id) {
 
+        return CustomerDetailDto.toDtoList(customerRepository.findTop10ByUsersIdOrderByCreatedAtDesc(id));
 
-
+    }
 }

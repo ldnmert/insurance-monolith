@@ -1,6 +1,7 @@
 package com.adayazilim.sigorta.controller;
 
 import com.adayazilim.sigorta.dto.CreatePolicyDto;
+import com.adayazilim.sigorta.dto.PolicyDetailDto;
 import com.adayazilim.sigorta.entity.Policy;
 import com.adayazilim.sigorta.entity.User;
 import com.adayazilim.sigorta.service.CustomerService;
@@ -11,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -41,4 +43,16 @@ public class PolicyController {
 //    policyService.createPolicy(policy);
 //    return ResponseEntity.ok(true);
 //    }
+
+    @GetMapping("/last-ten-policy")
+    public ResponseEntity<List<PolicyDetailDto>> getLastTenPolicy(Authentication authentication) {
+
+        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
+
+        List<PolicyDetailDto> policies = policyService.getLastTenPolicyOfCurrentUser(currentUser.getId());
+        return ResponseEntity.ok(policies);
+    }
+
+  
+
 }

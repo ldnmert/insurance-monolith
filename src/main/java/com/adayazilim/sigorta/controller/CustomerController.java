@@ -30,22 +30,39 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> createCustomer(@RequestBody CreateCustomerDto createCustomerDto, Authentication authentication) {
+    public ResponseEntity<?> createCustomer(@RequestBody CreateCustomerDto createCustomerDto, Authentication authentication) {
 
-       User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
+        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
         Customer customerExist = customerService.getCustomerByIdentificationNumber(createCustomerDto.getIdentificationNumber());
-        if(customerExist != null){
+        if (customerExist != null && customerExist.getUsers().contains(currentUser)) {
+//            customerExist.getUsers().add(currentUser);
+//            customerService.createCustomer(customerExist);
+            return ResponseEntity.ok("Bu kişi zaten bu kullanıcının müşterisi");
+        } else if (customerExist != null && !customerExist.getUsers().contains(currentUser)) {
             customerExist.getUsers().add(currentUser);
             customerService.createCustomer(customerExist);
-            return ResponseEntity.ok(true);
+            return ResponseEntity.ok("Müşteriye bu kullanıcı eklendi");
+        } else {
+            Customer customer = CreateCustomerDto.toCustomer(createCustomerDto);
+            customer.getUsers().add(currentUser);
+
+            customerService.createCustomer(customer);
+
+            return ResponseEntity.ok("Yeni müşteri eklendi");
         }
+    }
 
-       Customer customer = CreateCustomerDto.toCustomer(createCustomerDto);
-       customer.getUsers().add(currentUser);
+    @GetMapping("/check-customer-exist")
+    public ResponseEntity<CustomerDetailDto> checkCustomerExist(@RequestParam String identificationNumber) {
+        Customer customer = customerService.getCustomerByIdentificationNumber(identificationNumber);
 
-       customerService.createCustomer(customer);
+        if (customer == null)
+            return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(true);
+        else
+            return ResponseEntity.ok().body(CustomerDetailDto.toDto(customer));
+
+
     }
 
     @GetMapping
@@ -56,6 +73,14 @@ public class CustomerController {
     }
 
 
+    @GetMapping("/last-ten-customers")
+    public ResponseEntity<List<CustomerDetailDto>> getLastTenCustomersOfCurrentUser(Authentication authentication) {
 
+        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
+
+        List<CustomerDetailDto> customers = customerService.getLastTenCustomersByUserId(currentUser.getId());
+
+        return ResponseEntity.ok(customers);
+    }
 
 }

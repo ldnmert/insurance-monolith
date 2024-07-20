@@ -1,5 +1,6 @@
 package com.adayazilim.sigorta.service;
 
+import com.adayazilim.sigorta.dto.PolicyDetailDto;
 import com.adayazilim.sigorta.entity.Customer;
 import com.adayazilim.sigorta.entity.Policy;
 import com.adayazilim.sigorta.entity.User;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -55,5 +57,12 @@ public class PolicyService {
             policyNumber = String.format("%08d", random.nextInt(100000000));
         } while (policyRepository.existsByPolicyNumber(policyNumber));
         return policyNumber;
+    }
+
+    public List<PolicyDetailDto> getLastTenPolicyOfCurrentUser(Long id) {
+
+        List<Policy> policies =  policyRepository.findTop10ByUserIdOrderByCreatedAtDesc(id);
+        return PolicyDetailDto.toDtoList(policies);
+
     }
 }
