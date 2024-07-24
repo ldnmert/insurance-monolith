@@ -44,17 +44,30 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
     }
 
+//    @Override
+//    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) throws IOException, ServletException {
+//        UserDetails userDetails = userService.loadUserByUsername(((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername());
+//        String token = jwtUtil.generateToken(userDetails);
+//
+//        JSONObject jsonResponse = new JSONObject();
+//        jsonResponse.put("token", TOKEN_PREFIX + token);
+//
+//        PrintWriter writer = res.getWriter();
+//        writer.write(jsonResponse.toString());
+//        writer.flush();
+//    }
+
+
     @Override
-    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) throws IOException, ServletException {
-        UserDetails userDetails = userService.loadUserByUsername(((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername());
+    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
+                                            Authentication auth) throws IOException, ServletException {
+        UserDetails userDetails = userService.loadUserByUsername(
+                ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername());
+
         String token = jwtUtil.generateToken(userDetails);
+        res.addHeader("Access-Control-Expose-Headers", "Authorization");
+        res.addHeader("Authorization", "Bearer " + token);
 
-        JSONObject jsonResponse = new JSONObject();
-        jsonResponse.put("token", TOKEN_PREFIX + token);
-
-        PrintWriter writer = res.getWriter();
-        writer.write(jsonResponse.toString());
-        writer.flush();
     }
 
 }

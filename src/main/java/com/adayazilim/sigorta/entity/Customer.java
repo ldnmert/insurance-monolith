@@ -36,13 +36,17 @@ public class Customer {
     private String city;
     private String district;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @PrePersist
+    @PreUpdate
     protected void onCreate() {
+        System.out.println("girmez");
         this.createdAt = LocalDateTime.now();
     }
+
+
 
 
 

@@ -1,0 +1,51 @@
+package com.adayazilim.sigorta.controller;
+
+import com.adayazilim.sigorta.dto.CustomerDetailDto;
+import com.adayazilim.sigorta.dto.PolicyDetailDto;
+import com.adayazilim.sigorta.entity.Customer;
+import com.adayazilim.sigorta.service.CustomerService;
+import com.adayazilim.sigorta.service.PolicyService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/admin")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
+public class AdminController {
+
+    private final CustomerService customerService;
+    private final PolicyService policyService;
+
+    public AdminController(CustomerService customerService, PolicyService policyService) {
+        this.customerService = customerService;
+        this.policyService = policyService;
+
+    }
+
+    @GetMapping("/last-20-customer")
+    public ResponseEntity<List<CustomerDetailDto>> getLast20CustomerForAdmin(){
+        return ResponseEntity.ok(customerService.getLastTenCustomerForAdmin());
+    }
+    @GetMapping("/last-20-policies")
+    public ResponseEntity<List<PolicyDetailDto>> getLast20PoliciesForAdmin(){
+
+        return ResponseEntity.ok(policyService.getLast20Policies());
+
+    }
+
+    @GetMapping("/get-policy/{policyNumber}")
+    public ResponseEntity<PolicyDetailDto> getPolicyByPolicyNumber(@PathVariable  String policyNumber){
+        return ResponseEntity.ok(policyService.getPolicyDetailByPolicyNumber(policyNumber));
+    }
+
+    @GetMapping("/get-customer/{customerNumber}")
+    public ResponseEntity<CustomerDetailDto> getCustomerByIdentificationNumber(@PathVariable String customerNumber){
+        return ResponseEntity.ok().body(CustomerDetailDto.toDto(customerService.getCustomerByIdentificationNumber(customerNumber)));
+    }
+}

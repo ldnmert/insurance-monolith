@@ -4,6 +4,7 @@ import com.adayazilim.sigorta.dto.CustomerDetailDto;
 import com.adayazilim.sigorta.entity.Customer;
 import com.adayazilim.sigorta.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-
+    @Transactional
     public void createCustomer(Customer customer) {
         customerRepository.save(customer);
     }
@@ -42,5 +43,10 @@ public class CustomerService {
 
         return CustomerDetailDto.toDtoList(customerRepository.findTop10ByUsersIdOrderByCreatedAtDesc(id));
 
+    }
+
+    public List<CustomerDetailDto> getLastTenCustomerForAdmin(){
+        List<Customer> customers = customerRepository.findTop20ByOrderByCreatedAtDesc();
+        return CustomerDetailDto.toDtoList(customers);
     }
 }

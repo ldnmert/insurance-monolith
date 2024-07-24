@@ -7,6 +7,7 @@ import com.adayazilim.sigorta.entity.User;
 import com.adayazilim.sigorta.repository.PolicyRepository;
 
 import com.adayazilim.sigorta.repository.UserRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -79,5 +80,47 @@ public class PolicyService {
     public List<PolicyDetailDto> getPolicyOfCurrentUserByCustomer(Long userId, Long customerId) {
         List<Policy> policies = policyRepository.findByCustomerIdAndUserId(customerId, userId);
         return PolicyDetailDto.toDtoList(policies);
+    }
+
+    public List<PolicyDetailDto> getLast20Policies() {
+        return PolicyDetailDto.toDtoList(policyRepository.findTop10ByOrderByCreatedAtDesc());
+    }
+
+    public PolicyDetailDto getPolicyDetailByPolicyNumber(String policyNumber) {
+        return PolicyDetailDto.toDto(policyRepository.findByPolicyNumber(policyNumber).get());
+    }
+
+    public Policy getPolicyByPolicyNumber(String policyNumber) {
+        return policyRepository.findByPolicyNumber(policyNumber).get();
+    }
+
+    public List<PolicyDetailDto> getPoliciesOfCurrentUser(Long id) {
+        return PolicyDetailDto.toDtoList(policyRepository.findByUserId(id));
+    }
+
+    public List<PolicyDetailDto> getPoliciesByUserIdAndStatusAndSort(Long id, char status, String sortOption) {
+
+        Sort sort = Sort.by("createdAt").descending(); // Default sort by createdAt descending
+
+        if (sortOption != null) {
+            switch (sortOption) {
+                case "recent":
+                    sort = Sort.by("createdAt").descending();
+                    break;
+                case "amountAsc":
+                    sort = Sort.by("amount").ascending();
+                    break;
+                case "amountDesc":
+                    sort = Sort.by("amount").descending();
+                    break;
+            }
+        }
+
+        if(status == 'H') {
+            return PolicyDetailDto.toDtoList(policyRepository.findByUserId(id, sort));
+        }
+        else {
+            return PolicyDetailDto.toDtoList(policyRepository.findByUserIdAndStatus(id, status, sort));
+        }
     }
 }

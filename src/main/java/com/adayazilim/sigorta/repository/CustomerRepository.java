@@ -16,4 +16,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> findByIdentificationNumber(String identificationNumber);
 
     List<Customer> findTop10ByUsersIdOrderByCreatedAtDesc(Long userId);
+
+    List<Customer> findTop20ByOrderByCreatedAtDesc();
 }
