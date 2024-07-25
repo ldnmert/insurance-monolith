@@ -12,6 +12,8 @@ public class CreatePaymentDto {
     private String cardNumber;
     private String cvv;
 
+
+
     public static Payment toPayment(CreatePaymentDto dto) {
         Payment payment = new Payment();
         payment.setCardNumber(dto.getCardNumber());

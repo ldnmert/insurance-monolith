@@ -1,8 +1,7 @@
 package com.adayazilim.sigorta.controller;
 
-import com.adayazilim.sigorta.dto.CreatePaymentDto;
-import com.adayazilim.sigorta.dto.CreatePolicyDto;
-import com.adayazilim.sigorta.dto.PolicyDetailDto;
+import com.adayazilim.sigorta.dto.*;
+import com.adayazilim.sigorta.entity.Customer;
 import com.adayazilim.sigorta.entity.Policy;
 import com.adayazilim.sigorta.entity.User;
 import com.adayazilim.sigorta.service.CustomerService;
@@ -91,5 +90,30 @@ public class PolicyController {
 
     }
 
+    @GetMapping("/expiring-policies")
+    public ResponseEntity<List<PolicyDetailDto>> getExpiringPolicies(Authentication authentication) {
+        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
+        return ResponseEntity.ok(policyService.getExpiringPolicies(currentUser.getId()));
+    }
+
+    @GetMapping("/status-ratio")
+    public ResponseEntity<Double> getPolicyRate(Authentication authentication) {
+        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
+        double ratio = policyService.getStatusKRatioByUserId(currentUser.getId());
+        return ResponseEntity.ok(ratio);
+    }
+
+    @GetMapping("/top-three-sell")
+    public ResponseEntity<List<PolicyDetailDto>> getTopThreeSellPolicy(Authentication authentication) {
+        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
+        return ResponseEntity.ok(policyService.getTop3PoliciesByAmountDesc(currentUser.getId()));
+    }
+
+
+    @GetMapping("/policies/{customerId}")
+    public ResponseEntity<List<PolicyDto>> getPoliciesOfCustomer(Authentication authentication, @PathVariable Long customerId) {
+        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
+        return ResponseEntity.ok(policyService.getAllPoliciesOfCustomer(customerId ,currentUser.getId()));
+    }
 
 }

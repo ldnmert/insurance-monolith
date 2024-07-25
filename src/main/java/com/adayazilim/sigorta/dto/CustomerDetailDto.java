@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 @Data
 public class CustomerDetailDto {
 
+    private Long id;
+
     private String identificationNumber;
     private String name;
     private String surname;
@@ -30,6 +32,7 @@ public class CustomerDetailDto {
         dto.setPhone(customer.getPhone());
         dto.setCity(customer.getCity());
         dto.setDistrict(customer.getDistrict());
+        dto.setId(customer.getId());
 //        List<Long> userIds = customer.getUsers().stream()
 //                .map(User::getId)
 //                .collect(Collectors.toList());

@@ -1,6 +1,7 @@
 package com.adayazilim.sigorta.service;
 
 import com.adayazilim.sigorta.dto.PolicyDetailDto;
+import com.adayazilim.sigorta.dto.PolicyDto;
 import com.adayazilim.sigorta.entity.Customer;
 import com.adayazilim.sigorta.entity.Policy;
 import com.adayazilim.sigorta.entity.User;
@@ -12,10 +13,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Random;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class PolicyService {
@@ -122,5 +122,52 @@ public class PolicyService {
         else {
             return PolicyDetailDto.toDtoList(policyRepository.findByUserIdAndStatus(id, status, sort));
         }
+    }
+
+    public List<PolicyDetailDto> getExpiringPolicies(Long userId) {
+        LocalDate endDate = LocalDate.now().plusDays(5);
+        return PolicyDetailDto.toDtoList(policyRepository.findExpiringPoliciesByUserId(userId, endDate));
+    }
+
+    public double getStatusKRatioByUserId(Long userId) {
+        long countStatusK = policyRepository.countPoliciesByUserIdAndStatusK(userId);
+        long totalCount = policyRepository.countPoliciesByUserId(userId);
+
+        if (totalCount == 0) {
+            return 0; // Toplam poliçe sayısı 0 ise oran 0'dır
+        }
+
+        double ratio = (countStatusK / (double) totalCount) * 100;
+        return ratio;
+    }
+
+    public List<PolicyDetailDto> getTop3PoliciesByAmountDesc(Long userId) {
+        return PolicyDetailDto.toDtoList(policyRepository.findTop3ByUserIdOrderByAmountDesc(userId));
+    }
+
+    public List<Customer> getCustomersByUserId(Long userId) {
+        return policyRepository.findDistinctCustomersByUserId(userId);
+    }
+
+    public List<PolicyDto> getAllPoliciesOfCustomer(Long customerId, Long userId){
+
+        List<Policy> policies = policyRepository.findByCustomerId(customerId);
+        List<PolicyDto> policiesDto = new ArrayList<>();
+
+        for(Policy policy : policies){
+            PolicyDto policyDto = PolicyDto.toPolicyDto(policy);
+            if(policy.getUser().getId() == userId){
+
+                policyDto.setMyPolicy(true);
+                policiesDto.add(policyDto);
+            }
+            else {
+                policyDto.setMyPolicy(false);
+                policiesDto.add(policyDto);
+            }
+
+        }
+
+        return policiesDto;
     }
 }
