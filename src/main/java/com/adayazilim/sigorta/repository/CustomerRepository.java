@@ -11,11 +11,11 @@ import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    List<Customer> findByUsersId(Long userId);
+//    List<Customer> findByUsersId(Long userId);
 
     Optional<Customer> findByIdentificationNumber(String identificationNumber);
 
-    List<Customer> findTop10ByUsersIdOrderByCreatedAtDesc(Long userId);
+//    List<Customer> findTop10ByUsersIdOrderByCreatedAtDesc(Long userId);
 
     List<Customer> findTop20ByOrderByCreatedAtDesc();
 }

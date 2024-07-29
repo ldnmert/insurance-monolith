@@ -19,13 +19,15 @@ public class User {
 
     private String username;
     private String password;
-
+    private String firstName;
+    private String lastName;
+    private String photo;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToMany(mappedBy = "users")
-    private List<Customer> customers = new ArrayList<>();
+//    @ManyToMany(mappedBy = "users")
+//    private List<Customer> customers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Policy> policies = new ArrayList<>();

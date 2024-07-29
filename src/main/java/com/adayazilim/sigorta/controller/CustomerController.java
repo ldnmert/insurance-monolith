@@ -56,11 +56,12 @@ public class CustomerController {
 //        }
 //    }
 
-//    @PostMapping
-//    public ResponseEntity createCustomer(@RequestBody CreateCustomerDto createCustomerDto, Authentication authentication) {
-//        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
-//
-//    }
+    @PostMapping
+    public ResponseEntity<CustomerDetailDto> createCustomer(@RequestBody CreateCustomerDto createCustomerDto) {
+        Customer customer = CreateCustomerDto.toCustomer(createCustomerDto);
+        CustomerDetailDto customerDetailDto = customerService.createCustomer(customer);
+        return ResponseEntity.ok(customerDetailDto);
+    }
 
     @GetMapping("/check-customer-exist")
     public ResponseEntity<CustomerDetailDto> checkCustomerExist(@RequestParam String identificationNumber) {
@@ -75,23 +76,23 @@ public class CustomerController {
 
     }
 
-    @GetMapping
-    public ResponseEntity<List<CustomerDetailDto>> getCustomers(Authentication authentication) {
-        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
-        List<CustomerDetailDto> customers = customerService.getCustomersOfCurrentUser(currentUser.getId());
-        return ResponseEntity.ok(customers);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<CustomerDetailDto>> getCustomers(Authentication authentication) {
+//        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
+//        List<CustomerDetailDto> customers = customerService.getCustomersOfCurrentUser(currentUser.getId());
+//        return ResponseEntity.ok(customers);
+//    }
 
 
-    @GetMapping("/last-ten-customers")
-    public ResponseEntity<List<CustomerDetailDto>> getLastTenCustomersOfCurrentUser(Authentication authentication) {
-
-        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
-
-        List<CustomerDetailDto> customers = customerService.getLastTenCustomersByUserId(currentUser.getId());
-
-        return ResponseEntity.ok(customers);
-    }
+//    @GetMapping("/last-ten-customers")
+//    public ResponseEntity<List<CustomerDetailDto>> getLastTenCustomersOfCurrentUser(Authentication authentication) {
+//
+//        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);
+//
+//        List<CustomerDetailDto> customers = customerService.getLastTenCustomersByUserId(currentUser.getId());
+//
+//        return ResponseEntity.ok(customers);
+//    }
 
     @GetMapping("/customers")
     public ResponseEntity<List<CustomerDetailDto>> getCustomersByUserId(Authentication authentication) {

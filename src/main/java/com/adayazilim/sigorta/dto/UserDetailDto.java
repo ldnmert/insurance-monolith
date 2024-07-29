@@ -14,7 +14,9 @@ public class UserDetailDto {
     private String username;
     private String password;
     private Role role;
-    private List<Long> customerIds;
+    private String firstName;
+    private String lastName;
+//    private List<Long> customerIds;
 //    private List<String> customerNames;
 
     public static UserDetailDto toDto(User user) {
@@ -23,11 +25,13 @@ public class UserDetailDto {
         dto.setUsername(user.getUsername());
         dto.setPassword(user.getPassword());
         dto.setRole(user.getRole());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
 
-        List<Long> customerIds = user.getCustomers().stream()
-                .map(Customer::getId)
-                .collect(Collectors.toList());
-        dto.setCustomerIds(customerIds);
+//        List<Long> customerIds = user.getCustomers().stream()
+//                .map(Customer::getId)
+//                .collect(Collectors.toList());
+//        dto.setCustomerIds(customerIds);
 
 //        List<String> customerNames = user.getCustomers().stream()
 //                .map(Customer::getName)

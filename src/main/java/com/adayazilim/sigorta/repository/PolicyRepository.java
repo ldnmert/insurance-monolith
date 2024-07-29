@@ -26,11 +26,15 @@ public interface PolicyRepository extends JpaRepository<Policy, Long> {
 
     List<Policy> findByUserIdAndStatus(Long userId, char status, Sort sort);
 
+    List<Policy> findByStatus(char status, Sort sort);
+
     List<Policy> findByUserId(Long userId, Sort sort);
 
     @Query("SELECT p FROM Policy p WHERE p.user.id = :userId AND p.endDate <= :endDate")
     List<Policy> findExpiringPoliciesByUserId(@Param("userId") Long userId, @Param("endDate") LocalDate endDate);
 
+    @Query("SELECT p FROM Policy p WHERE p.endDate <= :endDate")
+    List<Policy> findExpiringPolicies(@Param("endDate") LocalDate endDate);
 
     @Query("SELECT COUNT(p) FROM Policy p WHERE p.user.id = :userId AND p.status = 'K'")
     long countPoliciesByUserIdAndStatusK(@Param("userId") Long userId);

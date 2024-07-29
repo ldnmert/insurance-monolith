@@ -18,16 +18,16 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    @Transactional
-    public void createCustomer(Customer customer) {
-        customerRepository.save(customer);
+
+    public CustomerDetailDto createCustomer(Customer customer) {
+       return CustomerDetailDto.toDto(customerRepository.save(customer));
     }
 
-    public List<CustomerDetailDto> getCustomersOfCurrentUser(Long id) {
-        List<Customer> customers = customerRepository.findByUsersId(id);
-
-        return CustomerDetailDto.toDtoList(customers);
-    }
+//    public List<CustomerDetailDto> getCustomersOfCurrentUser(Long id) {
+//        List<Customer> customers = customerRepository.findByUsersId(id);
+//
+//        return CustomerDetailDto.toDtoList(customers);
+//    }
 
     public Customer getCustomerById(Long id) {
         return customerRepository.findById(id).get();
@@ -39,11 +39,11 @@ public class CustomerService {
     }
 
 
-    public List<CustomerDetailDto> getLastTenCustomersByUserId(Long id) {
-
-        return CustomerDetailDto.toDtoList(customerRepository.findTop10ByUsersIdOrderByCreatedAtDesc(id));
-
-    }
+//    public List<CustomerDetailDto> getLastTenCustomersByUserId(Long id) {
+//
+//        return CustomerDetailDto.toDtoList(customerRepository.findTop10ByUsersIdOrderByCreatedAtDesc(id));
+//
+//    }
 
     public List<CustomerDetailDto> getLastTenCustomerForAdmin(){
         List<Customer> customers = customerRepository.findTop20ByOrderByCreatedAtDesc();

@@ -13,7 +13,7 @@ public class PolicyDetailDto {
     private String branchCode;
     private double amount;
     private LocalDate startDate;
-
+    private char status;
     private LocalDate endDate;
     private String policyNumber;
     private CustomerDetailDto customerDetailDto;
@@ -27,7 +27,7 @@ public class PolicyDetailDto {
         dto.setEndDate(policy.getEndDate());
         dto.setPolicyNumber(policy.getPolicyNumber());
         dto.setCustomerDetailDto(CustomerDetailDto.toDto(policy.getCustomer()));
-
+        dto.setStatus(policy.getStatus());
         return dto;
     }
 

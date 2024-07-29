@@ -3,14 +3,12 @@ package com.adayazilim.sigorta.controller;
 import com.adayazilim.sigorta.dto.CustomerDetailDto;
 import com.adayazilim.sigorta.dto.PolicyDetailDto;
 import com.adayazilim.sigorta.entity.Customer;
+import com.adayazilim.sigorta.repository.PolicyRepository;
 import com.adayazilim.sigorta.service.CustomerService;
 import com.adayazilim.sigorta.service.PolicyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,10 +19,12 @@ public class AdminController {
 
     private final CustomerService customerService;
     private final PolicyService policyService;
+    private final PolicyRepository policyRepository;
 
-    public AdminController(CustomerService customerService, PolicyService policyService) {
+    public AdminController(CustomerService customerService, PolicyService policyService, PolicyRepository policyRepository) {
         this.customerService = customerService;
         this.policyService = policyService;
+        this.policyRepository = policyRepository;
 
     }
 
@@ -47,5 +47,15 @@ public class AdminController {
     @GetMapping("/get-customer/{customerNumber}")
     public ResponseEntity<CustomerDetailDto> getCustomerByIdentificationNumber(@PathVariable String customerNumber){
         return ResponseEntity.ok().body(CustomerDetailDto.toDto(customerService.getCustomerByIdentificationNumber(customerNumber)));
+    }
+
+    @GetMapping("/get-policies")
+    public ResponseEntity<List<PolicyDetailDto>> getPolicies(@RequestParam String sortOption, @RequestParam char status){
+        return ResponseEntity.ok(policyService.getPoliciesByStatusAndSort(status, sortOption));
+    }
+
+    @GetMapping("/expiringPolicies")
+    public ResponseEntity<List<PolicyDetailDto>> getExpiringPolicies(){
+        return ResponseEntity.ok(policyService.getExpiringPoliciesAdmin());
     }
 }

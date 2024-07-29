@@ -1,7 +1,10 @@
 package com.adayazilim.sigorta.service;
 
 import com.adayazilim.sigorta.dto.CreateVehicleDto;
+import com.adayazilim.sigorta.entity.Policy;
 import com.adayazilim.sigorta.entity.Vehicle;
+import com.adayazilim.sigorta.entity.VehicleCode;
+import com.adayazilim.sigorta.repository.VehicleCodeRepository;
 import com.adayazilim.sigorta.repository.VehicleRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +13,29 @@ public class InsuranceService {
 
     private final VehicleRepository vehicleRepository;
     private final PolicyService policyService;
+    private final VehicleCodeRepository vcodeRepository;
+    private final VehicleCodeRepository vehicleCodeRepository;
 
 
-    public InsuranceService(VehicleRepository vehicleRepositoryRepository, PolicyService policyService) {
+    public InsuranceService(VehicleRepository vehicleRepositoryRepository, PolicyService policyService, VehicleCodeRepository vcodeRepository, VehicleCodeRepository vehicleCodeRepository) {
         this.vehicleRepository = vehicleRepositoryRepository;
         this.policyService = policyService;
+        this.vcodeRepository = vcodeRepository;
+        this.vehicleCodeRepository = vehicleCodeRepository;
     }
 
-    public void createVehicle(Vehicle vehicle, Long customerId, double amount) {
 
-       String policyNumber = policyService.createPolicy("310", customerId, amount);
-       vehicle.setPolicyNumber(policyNumber);
+    public Policy createVehicle(Vehicle vehicle, Long customerId, String carCode) {
+
+        VehicleCode vehicleCode = vehicleCodeRepository.findByVehicleCode(carCode);
+
+       Policy policy = policyService.createPolicy("310", customerId);
+       vehicle.setPolicyNumber(policy.getPolicyNumber());
+       vehicle.setModel(vehicleCode.getModel());
+       vehicle.setBrand(vehicleCode.getMake());
+       vehicle.setYear(vehicleCode.getYear());
        vehicleRepository.save(vehicle);
-
+        return policy;
     }
 
 }

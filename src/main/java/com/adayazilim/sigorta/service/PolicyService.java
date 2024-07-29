@@ -31,7 +31,7 @@ public class PolicyService {
     }
 
 
-    public String createPolicy(String branchCode, Long customerId, double amount) {
+    public Policy createPolicy(String branchCode, Long customerId) {
         Policy policy = new Policy();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Customer customer = customerService.getCustomerById(customerId);
@@ -40,15 +40,15 @@ public class PolicyService {
         String policyNumber = generateUniquePolicyNumber();
          policy.setPolicyNumber(policyNumber);
 
-        policy.setAmount(amount);
+
         User currentUser = userRepository.findByUsername(authentication.getName()).orElseThrow(NoSuchElementException::new);
         policy.setUser(currentUser);
 
 
 
-        policyRepository.save(policy);
 
-        return policyNumber;
+
+        return policyRepository.save(policy);
     }
 
     public double changeStatusAndGetAmount(String policyNumber) {
@@ -124,9 +124,39 @@ public class PolicyService {
         }
     }
 
+    public List<PolicyDetailDto> getPoliciesByStatusAndSort(char status, String sortOption) {
+        Sort sort = Sort.by("createdAt").descending(); // Default sort by createdAt descending
+
+        if (sortOption != null) {
+            switch (sortOption) {
+                case "recent":
+                    sort = Sort.by("createdAt").descending();
+                    break;
+                case "amountAsc":
+                    sort = Sort.by("amount").ascending();
+                    break;
+                case "amountDesc":
+                    sort = Sort.by("amount").descending();
+                    break;
+            }
+        }
+
+        if(status == 'H') {
+            return PolicyDetailDto.toDtoList(policyRepository.findAll(sort));
+        }
+        else {
+            return PolicyDetailDto.toDtoList(policyRepository.findByStatus(status, sort));
+        }
+    }
+
     public List<PolicyDetailDto> getExpiringPolicies(Long userId) {
         LocalDate endDate = LocalDate.now().plusDays(5);
         return PolicyDetailDto.toDtoList(policyRepository.findExpiringPoliciesByUserId(userId, endDate));
+    }
+
+    public List<PolicyDetailDto> getExpiringPoliciesAdmin(){
+        LocalDate endDate = LocalDate.now().plusDays(5);
+        return PolicyDetailDto.toDtoList(policyRepository.findExpiringPolicies(endDate));
     }
 
     public double getStatusKRatioByUserId(Long userId) {
