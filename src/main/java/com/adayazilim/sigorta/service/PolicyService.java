@@ -31,7 +31,7 @@ public class PolicyService {
     }
 
 
-    public Policy createPolicy(String branchCode, Long customerId) {
+    public Policy createPolicy(String branchCode, Long customerId, double amount) {
         Policy policy = new Policy();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Customer customer = customerService.getCustomerById(customerId);
@@ -39,7 +39,7 @@ public class PolicyService {
         policy.setBranchCode(branchCode);
         String policyNumber = generateUniquePolicyNumber();
          policy.setPolicyNumber(policyNumber);
-
+        policy.setAmount(amount * 0.10);
 
         User currentUser = userRepository.findByUsername(authentication.getName()).orElseThrow(NoSuchElementException::new);
         policy.setUser(currentUser);
@@ -162,6 +162,18 @@ public class PolicyService {
     public double getStatusKRatioByUserId(Long userId) {
         long countStatusK = policyRepository.countPoliciesByUserIdAndStatusK(userId);
         long totalCount = policyRepository.countPoliciesByUserId(userId);
+
+        if (totalCount == 0) {
+            return 0; // Toplam poliçe sayısı 0 ise oran 0'dır
+        }
+
+        double ratio = (countStatusK / (double) totalCount) * 100;
+        return ratio;
+    }
+
+    public double getStatusKRatio(){
+        long countStatusK = policyRepository.countPoliciesByStatusK();
+        long totalCount = policyRepository.countPolicies();
 
         if (totalCount == 0) {
             return 0; // Toplam poliçe sayısı 0 ise oran 0'dır

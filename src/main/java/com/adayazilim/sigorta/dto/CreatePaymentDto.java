@@ -12,12 +12,14 @@ public class CreatePaymentDto {
     private String cardNumber;
     private String cvv;
 
-
+    private String cardHolder;
+    private String expiryDate;
 
     public static Payment toPayment(CreatePaymentDto dto) {
         Payment payment = new Payment();
         payment.setCardNumber(dto.getCardNumber());
-        System.out.println(dto.getCvv());
+        payment.setCardHolder(dto.getCardHolder());
+        payment.setExpiryDate(dto.getExpiryDate());
         payment.setCvv(dto.getCvv());
         return payment;
     }

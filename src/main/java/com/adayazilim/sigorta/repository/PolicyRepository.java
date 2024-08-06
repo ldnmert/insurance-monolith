@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PolicyRepository extends JpaRepository<Policy, Long> {
-    boolean existsByPolicyNumber(String policyNumber);
+        boolean existsByPolicyNumber(String policyNumber);
 
     Optional<Policy> findByPolicyNumber(String policyNumber);
     List<Policy> findTop10ByUserIdOrderByCreatedAtDesc(Long userId);
@@ -49,4 +49,10 @@ public interface PolicyRepository extends JpaRepository<Policy, Long> {
     List<Customer> findDistinctCustomersByUserId(@Param("userId") Long userId);
 
     List<Policy> findByCustomerId(Long customerId);
+
+    @Query("SELECT COUNT(p) FROM Policy p WHERE p.status = 'K'")
+    long countPoliciesByStatusK();
+
+    @Query("SELECT COUNT(p) FROM Policy p")
+    long countPolicies();
 }

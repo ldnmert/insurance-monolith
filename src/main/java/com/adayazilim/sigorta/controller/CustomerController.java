@@ -76,6 +76,12 @@ public class CustomerController {
 
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<CustomerDetailDto> searchCustomer(@RequestParam String identificationNumber) {
+        Customer customer = customerService.getCustomerByIdentificationNumber(identificationNumber);
+        return ResponseEntity.ok(CustomerDetailDto.toDto(customer));
+    }
+
 //    @GetMapping
 //    public ResponseEntity<List<CustomerDetailDto>> getCustomers(Authentication authentication) {
 //        User currentUser = userService.getUserByName(authentication.getName()).orElseThrow(NoSuchElementException::new);

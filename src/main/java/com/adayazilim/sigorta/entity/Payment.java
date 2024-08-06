@@ -21,6 +21,8 @@ public class Payment {
 
     private String cardNumber;
     private String cvv;
+    private String expiryDate;
+    private String cardHolder;
 
     @PrePersist
     protected void onCreate() {

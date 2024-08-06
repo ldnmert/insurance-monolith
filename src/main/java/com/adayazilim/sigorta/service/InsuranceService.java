@@ -13,14 +13,12 @@ public class InsuranceService {
 
     private final VehicleRepository vehicleRepository;
     private final PolicyService policyService;
-    private final VehicleCodeRepository vcodeRepository;
     private final VehicleCodeRepository vehicleCodeRepository;
 
 
     public InsuranceService(VehicleRepository vehicleRepositoryRepository, PolicyService policyService, VehicleCodeRepository vcodeRepository, VehicleCodeRepository vehicleCodeRepository) {
         this.vehicleRepository = vehicleRepositoryRepository;
         this.policyService = policyService;
-        this.vcodeRepository = vcodeRepository;
         this.vehicleCodeRepository = vehicleCodeRepository;
     }
 
@@ -29,7 +27,7 @@ public class InsuranceService {
 
         VehicleCode vehicleCode = vehicleCodeRepository.findByVehicleCode(carCode);
 
-       Policy policy = policyService.createPolicy("310", customerId);
+       Policy policy = policyService.createPolicy("310", customerId, vehicleCode.getAmount());
        vehicle.setPolicyNumber(policy.getPolicyNumber());
        vehicle.setModel(vehicleCode.getModel());
        vehicle.setBrand(vehicleCode.getMake());

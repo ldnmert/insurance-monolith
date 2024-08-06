@@ -3,9 +3,10 @@ package com.adayazilim.sigorta.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
-
 public class Vehicle {
 
     @Id
@@ -21,7 +22,10 @@ public class Vehicle {
     private String engineNumber;
     private String chassisNumber;
 
+    private LocalDate createdAt;
 
-
-
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDate.now();
+    }
 }

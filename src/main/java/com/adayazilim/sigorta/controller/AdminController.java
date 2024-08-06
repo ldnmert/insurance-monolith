@@ -3,6 +3,7 @@ package com.adayazilim.sigorta.controller;
 import com.adayazilim.sigorta.dto.CustomerDetailDto;
 import com.adayazilim.sigorta.dto.PolicyDetailDto;
 import com.adayazilim.sigorta.entity.Customer;
+import com.adayazilim.sigorta.repository.CustomerRepository;
 import com.adayazilim.sigorta.repository.PolicyRepository;
 import com.adayazilim.sigorta.service.CustomerService;
 import com.adayazilim.sigorta.service.PolicyService;
@@ -20,12 +21,13 @@ public class AdminController {
     private final CustomerService customerService;
     private final PolicyService policyService;
     private final PolicyRepository policyRepository;
+    private final CustomerRepository customerRepository;
 
-    public AdminController(CustomerService customerService, PolicyService policyService, PolicyRepository policyRepository) {
+    public AdminController(CustomerService customerService, PolicyService policyService, PolicyRepository policyRepository, CustomerRepository customerRepository) {
         this.customerService = customerService;
         this.policyService = policyService;
         this.policyRepository = policyRepository;
-
+        this.customerRepository = customerRepository;
     }
 
     @GetMapping("/last-20-customer")
@@ -57,5 +59,15 @@ public class AdminController {
     @GetMapping("/expiringPolicies")
     public ResponseEntity<List<PolicyDetailDto>> getExpiringPolicies(){
         return ResponseEntity.ok(policyService.getExpiringPoliciesAdmin());
+    }
+
+    @GetMapping("/ratio")
+    public ResponseEntity<Double> getRatioK(){
+        return ResponseEntity.ok(policyService.getStatusKRatio());
+    }
+
+    @GetMapping("/customers")
+    public ResponseEntity<List<CustomerDetailDto>> getCustomers(){
+        return ResponseEntity.ok(CustomerDetailDto.toDtoList(customerRepository.findAll()));
     }
 }
